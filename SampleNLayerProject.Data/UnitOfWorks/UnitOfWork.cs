@@ -11,6 +11,8 @@ namespace SampleNLayerProject.Data.UnitOfWorks
         private readonly AppDbContext _appDbContext;
         private ProductRepository _productRepository;
         private CategoryRepository _categoryRepository;
+        private OrderRepository _orderRepository;
+        private SolusyonRepository _solusyonRepository;
 
         public UnitOfWork(AppDbContext appDbContext)
         {
@@ -19,6 +21,8 @@ namespace SampleNLayerProject.Data.UnitOfWorks
 
         public IProductRepository Products => _productRepository = _productRepository ?? new ProductRepository(_appDbContext);
         public ICategoryRepository Categories => _categoryRepository = _categoryRepository ?? new CategoryRepository(_appDbContext);
+        public IOrderRepository Orders => _orderRepository = _orderRepository ?? new OrderRepository(_appDbContext);
+        public ISolusyonRepository Solusyons => _solusyonRepository = _solusyonRepository ?? new SolusyonRepository(_appDbContext);
 
         public void Commit()
         {

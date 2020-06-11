@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SampleNLayerProject.Data.Migrations
 {
@@ -18,6 +19,30 @@ namespace SampleNLayerProject.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    orderId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    dosyaNo = table.Column<int>(nullable: false),
+                    hastaTCKimlikNo = table.Column<int>(nullable: false),
+                    hastaAdi = table.Column<string>(maxLength: 50, nullable: false),
+                    hastaSoyadi = table.Column<string>(maxLength: 50, nullable: false),
+                    orderTarihSaat = table.Column<DateTime>(nullable: false),
+                    hastaTipi = table.Column<int>(nullable: false),
+                    artirimOrani = table.Column<int>(nullable: false),
+                    klinikAdi = table.Column<string>(nullable: false),
+                    orderVerenDoktorAdSoyad = table.Column<string>(maxLength: 100, nullable: false),
+                    dogumTarihi = table.Column<DateTime>(nullable: false),
+                    kilo = table.Column<double>(nullable: false),
+                    cinsiyet = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.orderId);
                 });
 
             migrationBuilder.CreateTable(
@@ -41,6 +66,30 @@ namespace SampleNLayerProject.Data.Migrations
                         column: x => x.CategoryId,
                         principalTable: "Categories",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Solusyon",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    orderId = table.Column<int>(nullable: false),
+                    volume = table.Column<double>(nullable: false),
+                    doktorMiktar = table.Column<int>(nullable: false),
+                    solusyonTipId = table.Column<int>(nullable: false),
+                    solusyonId = table.Column<int>(nullable: false),
+                    birim = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Solusyon", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Solusyon_Orders_orderId",
+                        column: x => x.orderId,
+                        principalTable: "Orders",
+                        principalColumn: "orderId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -69,6 +118,11 @@ namespace SampleNLayerProject.Data.Migrations
                 name: "IX_Products_CategoryId",
                 table: "Products",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Solusyon_orderId",
+                table: "Solusyon",
+                column: "orderId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -77,7 +131,13 @@ namespace SampleNLayerProject.Data.Migrations
                 name: "Products");
 
             migrationBuilder.DropTable(
+                name: "Solusyon");
+
+            migrationBuilder.DropTable(
                 name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
         }
     }
 }

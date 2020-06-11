@@ -7,6 +7,8 @@ namespace SampleNLayerProject.Core.UnitOfWorks
     {
         IProductRepository Products { get; }
         ICategoryRepository Categories { get; }
+        IOrderRepository Orders { get; }
+        ISolusyonRepository Solusyons { get; }
 
         Task CommitAsync();
         void Commit();

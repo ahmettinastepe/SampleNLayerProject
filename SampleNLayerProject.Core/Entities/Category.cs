@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using SampleNLayerProject.Core.Entities.Abstract;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace SampleNLayerProject.Core.Entities
 {
-    public class Category
+    public class Category : IEntity
     {
         public Category()
         {

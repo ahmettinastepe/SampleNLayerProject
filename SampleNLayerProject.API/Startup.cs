@@ -37,6 +37,8 @@ namespace SampleNLayerProject.API
             services.AddScoped(typeof(IService<>), typeof(Service.Services.Service<>));
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<ISolusyonService, SolusyonService>();
 
             services.AddDbContext<AppDbContext>(options =>
             {
