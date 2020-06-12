@@ -25,12 +25,27 @@ namespace SampleNLayerProject.API.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost("OrderGuncelle")]
-        public async Task<IActionResult> Save(OrderDto orderDto)
+        /// <summary>
+        /// Return All Orders
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
         {
-            var orderS = _mapper.Map<OrderS>(orderDto);
+            var orders = await _orderService.GetAllAsync();
+            return Ok(orders);
+        }
+
+        /// <summary>
+        /// Yeni Order Ekle/Güncelle
+        /// </summary>
+        /// <param name="upsertParams">Client Objesi</param>
+        [HttpPost("OrderGuncelle")]
+        public async Task<IActionResult> Save(UpsertParamsDto upsertParams)
+        {
+            var orderS = _mapper.Map<OrderS>(upsertParams.upsertParams);
             var order = await _orderService.AddAsync(_mapper.Map<Order>(orderS));
-            var solutions = _mapper.Map<List<Solusyon>>(orderDto.solusyonBilgisi.ToList());
+            var solutions = _mapper.Map<List<Solusyon>>(upsertParams.upsertParams.solusyonBilgisi.ToList());
 
             foreach (var item in solutions)
                 item.orderId = order.orderId;
@@ -52,6 +67,33 @@ namespace SampleNLayerProject.API.Controllers
             };
 
             return Created(string.Empty, response);
+        }
+
+        /// <summary>
+        /// Girilen Order ID sine göre Veritabanından İlgili Kaydı Siler.
+        /// </summary>
+        /// <param name="orderId">Silinecek Id</param>
+        /// <returns></returns>
+        [HttpDelete("{orderId}")]
+        public async Task<IActionResult> Delete(int orderId)
+        {
+            var entity = await _orderService.GetByIdAsync(orderId);
+            _orderService.Remove(entity);
+
+            var response = new OrderResponseList()
+            {
+                result = new List<OrderResponse>()
+                {
+                    new OrderResponse()
+                    {
+                        Durum = 1,
+                        HataKodu = 0000,
+                        HataMesaji = "İşlem Başarılı"
+                    }
+                }
+            };
+
+            return Ok(response);
         }
     }
 }
